@@ -11,6 +11,7 @@ const createEvent = async (req, res) => {
       endTime,
       status,
       remindBeforeMinutes,
+      reminderEnabled,
     } = req.body;
 
     const event = await eventModel.create({
@@ -21,6 +22,7 @@ const createEvent = async (req, res) => {
       status,
       reminder: {
         remindBeforeMinutes: remindBeforeMinutes || 30,
+        enabled: reminderEnabled !== undefined ? reminderEnabled : true,
       },
       userId: user,
     });
@@ -97,23 +99,42 @@ const updateEvent = async (req, res) => {
       endTime,
       status,
       remindBeforeMinutes,
+      reminderEnabled,
     } = req.body || {};
+
+    const updateData = {
+      title,
+      description,
+      startTime,
+      endTime,
+      status,
+    };
+
+    if (remindBeforeMinutes !== undefined) {
+      updateData["reminder.remindBeforeMinutes"] = remindBeforeMinutes;
+      // If the reminder time changes, we might want to reset notificationSent so they get a new reminder?
+      // For now, let's assume if they change the time, they might want a new reminder if it's in the future.
+      // But let's keep it simple and just update the time.
+      // Actually, if we don't reset notificationSent, and they move the event to later, they won't get a reminder.
+      // Let's reset notificationSent if remindBeforeMinutes or startTime changes.
+      updateData["reminder.notificationSent"] = false; 
+    }
+
+    if (reminderEnabled !== undefined) {
+      updateData["reminder.enabled"] = reminderEnabled;
+    }
+    
+    // Also reset notificationSent if startTime changes
+    if (startTime) {
+        updateData["reminder.notificationSent"] = false;
+    }
 
     const event = await eventModel.findOneAndUpdate(
       {
         _id: eventId,
         userId: user,
       },
-      {
-        title,
-        description,
-        startTime,
-        endTime,
-        status,
-        reminder: {
-          remindBeforeMinutes: remindBeforeMinutes,
-        },
-      },
+      { $set: updateData },
       { new: true }
     );
 

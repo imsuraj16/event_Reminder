@@ -51,6 +51,11 @@ const eventValidator = [
     .withMessage("remindBeforeMinutes must be between 0 and 10080")
     .toInt(),
 
+  body("reminderEnabled")
+    .optional()
+    .isBoolean()
+    .withMessage("reminderEnabled must be a boolean"),
+
   body("status")
     .optional()
     .isString().withMessage("Status must be a string")
@@ -111,6 +116,11 @@ const updateEventValidator = [
     .isInt({ min: 0, max: 7 * 24 * 60 })
     .withMessage("remindBeforeMinutes must be between 0 and 10080")
     .toInt(),
+
+  body("reminderEnabled")
+    .optional()
+    .isBoolean()
+    .withMessage("reminderEnabled must be a boolean"),
 
   body("status")
     .optional()

@@ -48,8 +48,12 @@ const eventSchema = new mongoose.Schema(
         type: Number,
         default: 30, // assignment requirement
         min: 0,
-        max: 7 * 24 * 60, // 7 din se zyada ka reminder mat allow karo
       },
+      notificationSent: {
+        type: Boolean,
+        default: false,
+      },
+    },
       scheduledAt: {
         type: Date, // job scheduler ne kab schedule kiya
       },
@@ -57,7 +61,6 @@ const eventSchema = new mongoose.Schema(
         type: Date, // notification kab actually gayi
       },
     },
-  },
   {
     timestamps: true, // adds createdAt, updatedAt
   }
