@@ -17,7 +17,7 @@ const registerUser = async (req, res) => {
     });
 
     if (userExists) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ message: "Email or username already exists" });
     }
 
     const user = await userModel.create({
