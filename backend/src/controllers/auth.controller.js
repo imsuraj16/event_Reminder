@@ -17,7 +17,9 @@ const registerUser = async (req, res) => {
     });
 
     if (userExists) {
-      return res.status(400).json({ message: "Email or username already exists" });
+      return res
+        .status(400)
+        .json({ message: "Email or username already exists" });
     }
 
     const user = await userModel.create({
@@ -58,9 +60,11 @@ const loginUser = async (req, res) => {
   try {
     const { userName, email, password } = req.body;
 
-    const userExists = await userModel.findOne({
-      $or: [{ email }, { userName }],
-    }).select("+password");
+    const userExists = await userModel
+      .findOne({
+        $or: [{ email }, { userName }],
+      })
+      .select("+password");
 
     if (!userExists) {
       return res.status(400).json({ message: "Invalid credentials" });
@@ -100,7 +104,37 @@ const loginUser = async (req, res) => {
   }
 };
 
+// Get Profile
+const getProfile = async (req, res) => {
+  try {
+    const user = req.user;
+    return res.status(200).json({
+      success: true,
+      user: {
+        id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        userName: user.userName,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// Logout User
+const logoutUser = async (req, res) => {
+  try {
+    res.clearCookie("token");
+    return res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
+  getProfile,
+  logoutUser,
 };

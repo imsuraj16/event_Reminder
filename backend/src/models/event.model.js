@@ -21,6 +21,12 @@ const eventSchema = new mongoose.Schema(
       maxlength: 1000,
     },
 
+    location: {
+      type: String,
+      trim: true,
+      default: "TBD",
+    },
+
     startTime: {
       type: Date,
       required: true,
@@ -33,17 +39,13 @@ const eventSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["UPCOMING", "COMPLETED", "CANCELLED"],
+      enum: ["UPCOMING", "IN_PROGRESS", "COMPLETED", "CANCELLED"],
       default: "UPCOMING",
       index: true,
     },
 
     // Reminder config for Web Push
     reminder: {
-      enabled: {
-        type: Boolean,
-        default: true,
-      },
       remindBeforeMinutes: {
         type: Number,
         default: 30, // assignment requirement
@@ -54,13 +56,13 @@ const eventSchema = new mongoose.Schema(
         default: false,
       },
     },
-      scheduledAt: {
-        type: Date, // job scheduler ne kab schedule kiya
-      },
-      sentAt: {
-        type: Date, // notification kab actually gayi
-      },
+    scheduledAt: {
+      type: Date, // job scheduler ne kab schedule kiya
     },
+    sentAt: {
+      type: Date, // notification kab actually gayi
+    },
+  },
   {
     timestamps: true, // adds createdAt, updatedAt
   }

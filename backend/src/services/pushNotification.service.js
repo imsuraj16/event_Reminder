@@ -1,9 +1,10 @@
 const webpush = require('web-push');
+const config = require('../config/config');
 
 webpush.setVapidDetails(
-  process.env.VAPID_EMAIL,
-  process.env.VAPID_PUBLIC_KEY,
-  process.env.VAPID_PRIVATE_KEY
+  config.VAPID_EMAIL,
+  config.VAPID_PUBLIC_KEY,
+  config.VAPID_PRIVATE_KEY
 );
 
 const sendNotification = async (subscription, payload) => {
@@ -12,7 +13,7 @@ const sendNotification = async (subscription, payload) => {
     return true;
   } catch (error) {
     console.error('Error sending notification:', error);
-    return false;
+    throw error; 
   }
 };
 

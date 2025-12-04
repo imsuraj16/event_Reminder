@@ -1,4 +1,5 @@
 const User = require('../models/user.model');
+const config = require('../config/config');
 
 module.exports.subscribe = async (req, res) => {
   try {
@@ -32,5 +33,5 @@ module.exports.subscribe = async (req, res) => {
 };
 
 module.exports.getVapidPublicKey = (req, res) => {
-  res.status(200).json({ publicKey: process.env.VAPID_PUBLIC_KEY });
+  res.status(200).json({ publicKey: config.VAPID_PUBLIC_KEY });
 };

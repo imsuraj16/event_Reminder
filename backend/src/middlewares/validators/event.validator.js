@@ -1,39 +1,45 @@
-const { validationResult, body} = require("express-validator");
+const { validationResult, body } = require("express-validator");
 const eventModel = require("../../models/event.model");
 
-
-
 const errorResponse = (req, res, next) => {
-
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-    next();
-}
-
-
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  next();
+};
 
 const eventValidator = [
-
-     body("title")
+  body("title")
     .trim()
-    .notEmpty().withMessage("Title is required")
-    .isLength({ min: 3, max: 120 }).withMessage("Title must be 3-120 characters"),
+    .notEmpty()
+    .withMessage("Title is required")
+    .isLength({ min: 3, max: 120 })
+    .withMessage("Title must be 3-120 characters"),
 
-    body("description")
+  body("description")
     .optional()
     .trim()
-    .isLength({ max: 1000 }).withMessage("Description max 1000 characters"),
+    .isLength({ max: 1000 })
+    .withMessage("Description max 1000 characters"),
 
-     body("startTime")
-    .notEmpty().withMessage("startTime is required")
-    .isISO8601().withMessage("startTime must be a valid ISO8601 date")
+  body("location")
+    .optional()
+    .trim()
+    .isLength({ max: 200 })
+    .withMessage("Location max 200 characters"),
+
+  body("startTime")
+    .notEmpty()
+    .withMessage("startTime is required")
+    .isISO8601()
+    .withMessage("startTime must be a valid ISO8601 date")
     .toDate(),
 
-     body("endTime")
+  body("endTime")
     .optional()
-    .isISO8601().withMessage("endTime must be a valid ISO8601 date")
+    .isISO8601()
+    .withMessage("endTime must be a valid ISO8601 date")
     .toDate()
     .custom((value, { req }) => {
       if (!value) return true;
@@ -46,48 +52,48 @@ const eventValidator = [
     }),
 
   body("remindBeforeMinutes")
-    .optional()
+    .notEmpty()
+    .withMessage("remindBeforeMinutes is required")
     .isInt({ min: 0, max: 7 * 24 * 60 })
     .withMessage("remindBeforeMinutes must be between 0 and 10080")
     .toInt(),
 
-  body("reminderEnabled")
-    .optional()
-    .isBoolean()
-    .withMessage("reminderEnabled must be a boolean"),
-
   body("status")
     .optional()
-    .isString().withMessage("Status must be a string")
+    .isString()
+    .withMessage("Status must be a string")
     .customSanitizer((value) => value.toUpperCase())
     .isIn(["UPCOMING", "COMPLETED", "CANCELLED"])
     .withMessage("status must be one of: UPCOMING, COMPLETED, CANCELLED"),
-    
-    errorResponse,
+
+  errorResponse,
 ];
 
-
 const updateEventValidator = [
-
   body("title")
     .optional()
     .trim()
-    .notEmpty().withMessage("Title cannot be empty")
-    .isLength({ min: 3, max: 120 }).withMessage("Title must be 3-120 characters"),
+    .notEmpty()
+    .withMessage("Title cannot be empty")
+    .isLength({ min: 3, max: 120 })
+    .withMessage("Title must be 3-120 characters"),
 
   body("description")
     .optional()
     .trim()
-    .isLength({ max: 1000 }).withMessage("Description max 1000 characters"),
+    .isLength({ max: 1000 })
+    .withMessage("Description max 1000 characters"),
 
   body("startTime")
     .optional()
-    .isISO8601().withMessage("startTime must be a valid ISO8601 date")
+    .isISO8601()
+    .withMessage("startTime must be a valid ISO8601 date")
     .toDate(),
 
   body("endTime")
     .optional()
-    .isISO8601().withMessage("endTime must be a valid ISO8601 date")
+    .isISO8601()
+    .withMessage("endTime must be a valid ISO8601 date")
     .toDate()
     .custom(async (value, { req }) => {
       if (!value) return true;
@@ -117,24 +123,18 @@ const updateEventValidator = [
     .withMessage("remindBeforeMinutes must be between 0 and 10080")
     .toInt(),
 
-  body("reminderEnabled")
-    .optional()
-    .isBoolean()
-    .withMessage("reminderEnabled must be a boolean"),
-
   body("status")
     .optional()
-    .isString().withMessage("Status must be a string")
+    .isString()
+    .withMessage("Status must be a string")
     .customSanitizer((value) => value.toUpperCase())
     .isIn(["UPCOMING", "COMPLETED", "CANCELLED"])
     .withMessage("status must be one of: UPCOMING, COMPLETED, CANCELLED"),
-    
-    errorResponse,
 
-]
-
+  errorResponse,
+];
 
 module.exports = {
-    eventValidator,
-    updateEventValidator,
+  eventValidator,
+  updateEventValidator,
 };
