@@ -41,18 +41,21 @@ const EventCard = ({ event, onEdit, onDelete }) => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
+    return date.toLocaleDateString("en-IN", {
       weekday: "short",
       month: "short",
       day: "numeric",
+      timeZone: "Asia/Kolkata",
     });
   };
 
   const formatTime = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString("en-US", {
+    return date.toLocaleTimeString("en-IN", {
       hour: "numeric",
       minute: "2-digit",
+      hour12: true,
+      timeZone: "Asia/Kolkata",
     });
   };
 

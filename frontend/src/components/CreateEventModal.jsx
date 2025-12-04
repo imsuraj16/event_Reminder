@@ -28,19 +28,37 @@ const CreateEventModal = ({
     },
   });
 
+  // Handle form submission with proper date conversion
+  const handleFormSubmit = (data) => {
+    const formattedData = {
+      ...data,
+      // Convert datetime-local value to proper Date (it's already in local time)
+      startTime: data.startTime ? new Date(data.startTime).toISOString() : null,
+      endTime: data.endTime ? new Date(data.endTime).toISOString() : null,
+    };
+    onSubmit(formattedData);
+  };
+
   useEffect(() => {
     if (isOpen) {
       if (initialData) {
-        // Format dates for datetime-local input
-        const formatDate = (dateStr) => {
+        // Format dates for datetime-local input (needs local time format)
+        const formatDateForInput = (dateStr) => {
           if (!dateStr) return "";
-          return new Date(dateStr).toISOString().slice(0, 16);
+          const date = new Date(dateStr);
+          // Format as YYYY-MM-DDTHH:mm in local time
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, '0');
+          const hours = String(date.getHours()).padStart(2, '0');
+          const minutes = String(date.getMinutes()).padStart(2, '0');
+          return `${year}-${month}-${day}T${hours}:${minutes}`;
         };
 
         reset({
           ...initialData,
-          startTime: formatDate(initialData.startTime),
-          endTime: formatDate(initialData.endTime),
+          startTime: formatDateForInput(initialData.startTime),
+          endTime: formatDateForInput(initialData.endTime),
           remindBeforeMinutes: initialData.reminder?.remindBeforeMinutes ?? 30,
         });
       } else {
@@ -74,7 +92,7 @@ const CreateEventModal = ({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="p-6 space-y-4">
           {/* Title */}
           <div className="space-y-1">
             <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
