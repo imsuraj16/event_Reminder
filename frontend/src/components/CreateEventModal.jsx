@@ -21,11 +21,9 @@ const CreateEventModal = ({
       title: "",
       description: "",
       location: "",
-      attendees: 0,
       startTime: "",
       endTime: "",
       status: "UPCOMING",
-      reminderEnabled: true,
       remindBeforeMinutes: 30,
     },
   });
@@ -43,7 +41,6 @@ const CreateEventModal = ({
           ...initialData,
           startTime: formatDate(initialData.startTime),
           endTime: formatDate(initialData.endTime),
-          reminderEnabled: initialData.reminder?.enabled ?? true,
           remindBeforeMinutes: initialData.reminder?.remindBeforeMinutes ?? 30,
         });
       } else {
@@ -51,7 +48,6 @@ const CreateEventModal = ({
           title: "",
           description: "",
           location: "",
-          attendees: 0,
           startTime: "",
           endTime: "",
           status: "UPCOMING",

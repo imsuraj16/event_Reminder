@@ -1,5 +1,5 @@
 import React from "react";
-import { Calendar, MapPin, Users, Clock, Edit2, Trash2 } from "lucide-react";
+import { Calendar, MapPin, Clock, Edit2, Trash2 } from "lucide-react";
 
 const EventCard = ({ event, onEdit, onDelete }) => {
   // Calculate real-time status based on current time
@@ -103,11 +103,7 @@ const EventCard = ({ event, onEdit, onDelete }) => {
         </div>
 
         <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-50">
-          <div className="flex items-center gap-2 text-sm text-gray-500">
-            <Users className="w-4 h-4" />
-            <span>{event.attendees || 0} attending</span>
-          </div>
-          {event.reminder?.enabled && (
+          {event.reminder?.remindBeforeMinutes && (
             <div className="flex items-center gap-1 text-xs text-purple-600 bg-purple-50 px-2 py-1 rounded-md">
               <Clock className="w-3 h-3" />
               <span>{event.reminder.remindBeforeMinutes}m reminder</span>

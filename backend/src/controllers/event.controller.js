@@ -7,22 +7,22 @@ const createEvent = async (req, res) => {
     const {
       title,
       description,
+      location,
       startTime,
       endTime,
       status,
       remindBeforeMinutes,
-      reminderEnabled,
     } = req.body;
 
     const event = await eventModel.create({
       title,
       description,
+      location,
       startTime,
       endTime,
       status,
       reminder: {
         remindBeforeMinutes: remindBeforeMinutes || 30,
-        enabled: reminderEnabled !== undefined ? reminderEnabled : true,
       },
       userId: user,
     });
@@ -95,16 +95,17 @@ const updateEvent = async (req, res) => {
     const {
       title,
       description,
+      location,
       startTime,
       endTime,
       status,
       remindBeforeMinutes,
-      reminderEnabled,
     } = req.body || {};
 
     const updateData = {
       title,
       description,
+      location,
       startTime,
       endTime,
       status,
@@ -118,10 +119,6 @@ const updateEvent = async (req, res) => {
       // Actually, if we don't reset notificationSent, and they move the event to later, they won't get a reminder.
       // Let's reset notificationSent if remindBeforeMinutes or startTime changes.
       updateData["reminder.notificationSent"] = false; 
-    }
-
-    if (reminderEnabled !== undefined) {
-      updateData["reminder.enabled"] = reminderEnabled;
     }
     
     // Also reset notificationSent if startTime changes
