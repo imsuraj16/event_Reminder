@@ -5,13 +5,14 @@ import Register from "../pages/Register";
 import Dashboard from "../pages/Dashboard";
 import { Routes } from "react-router-dom";
 import { Route } from "react-router-dom";
+import Authwrapper from "./Authwrapper";
 const Mainroutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/dashboard" element={<Authwrapper><Dashboard /></Authwrapper>} />
     </Routes>
   );
 };

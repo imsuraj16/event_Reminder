@@ -4,7 +4,6 @@ import {
   X,
   Calendar,
   MapPin,
-  Users,
   Type,
   AlignLeft,
   Clock,
@@ -56,7 +55,6 @@ const CreateEventModal = ({
           startTime: "",
           endTime: "",
           status: "UPCOMING",
-          reminderEnabled: true,
           remindBeforeMinutes: 30,
         });
       }
@@ -153,7 +151,7 @@ const CreateEventModal = ({
             </div>
 
             {/* Attendees */}
-            <div className="space-y-1">
+            {/* <div className="space-y-1">
               <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
                 <Users className="w-4 h-4 text-gray-400" />
                 Attendees
@@ -164,39 +162,25 @@ const CreateEventModal = ({
                 className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-100 outline-none transition-all"
                 placeholder="0"
               />
-            </div>
+            </div> */}
           </div>
 
           {/* Reminder Settings */}
-          <div className="p-4 bg-gray-50 rounded-xl space-y-3">
-            <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                <Clock className="w-4 h-4 text-purple-500" />
-                Enable Reminder
-              </label>
-              <input
-                type="checkbox"
-                {...register("reminderEnabled")}
-                className="w-5 h-5 rounded text-purple-600 focus:ring-purple-500 border-gray-300"
-              />
-            </div>
+         <div className="p-4 bg-gray-50 rounded-xl flex items-center justify-start gap-3">
+  <span className="text-sm text-gray-600">Remind me</span>
 
-            {watch("reminderEnabled") && (
-              <div className="flex items-center gap-3">
-                <span className="text-sm text-gray-600">Remind me</span>
-                <select
-                  {...register("remindBeforeMinutes")}
-                  className="px-3 py-1.5 rounded-lg border border-gray-200 text-sm focus:border-purple-500 outline-none"
-                >
-                  <option value="15">15 minutes</option>
-                  <option value="30">30 minutes</option>
-                  <option value="60">1 hour</option>
-                  <option value="1440">1 day</option>
-                </select>
-                <span className="text-sm text-gray-600">before</span>
-              </div>
-            )}
-          </div>
+  <select
+    {...register("remindBeforeMinutes")}
+    className="px-3 py-1.5 rounded-lg border border-gray-200 text-sm focus:border-purple-500 outline-none"
+  >
+    <option value="15">15 minutes</option>
+    <option value="30">30 minutes</option>
+    <option value="60">1 hour</option>
+    <option value="1440">1 day</option>
+  </select>
+
+  <span className="text-sm text-gray-600">before</span>
+</div>
 
           {/* Status (Only for Edit) */}
           {initialData && (

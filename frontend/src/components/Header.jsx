@@ -25,14 +25,14 @@ const Header = () => {
           >
             Home
           </Link>
-          <Link
+          {
+            user ?  <Link
             to="/dashboard"
             className="text-gray-500 hover:text-gray-900 transition-colors font-medium"
           >
             Dashboard
-          </Link>
-          <Bell className="w-5 h-5 text-gray-500 hover:text-gray-900 cursor-pointer" />
-
+          </Link> : null
+          }
           {user ? (
             <button
               onClick={handleLogout}

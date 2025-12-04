@@ -16,7 +16,6 @@ import {
   Calendar,
   CheckCircle,
   TrendingUp,
-  Filter,
   Clock,
 } from "lucide-react";
 
