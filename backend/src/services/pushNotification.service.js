@@ -2,7 +2,7 @@ const webpush = require('web-push');
 const config = require('../config/config');
 
 webpush.setVapidDetails(
-  config.VAPID_EMAIL,
+  config.VAPID_EMAIL.startsWith('mailto:') ? config.VAPID_EMAIL : `mailto:${config.VAPID_EMAIL}`,
   config.VAPID_PUBLIC_KEY,
   config.VAPID_PRIVATE_KEY
 );

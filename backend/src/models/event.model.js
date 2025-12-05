@@ -55,6 +55,10 @@ const eventSchema = new mongoose.Schema(
         type: Boolean,
         default: false,
       },
+      enabled: {
+        type: Boolean,
+        default: true,
+      },
     },
     scheduledAt: {
       type: Date, // job scheduler ne kab schedule kiya

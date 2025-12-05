@@ -37,10 +37,12 @@ const setupCronJobs = () => {
       // We also filter for events starting in the future (or very recently started if we want to catch late ones, but let's say future for now)
       const events = await Event.find({
         status: "UPCOMING",
-        "reminder.enabled": true,
+        // "reminder.enabled": true, // Removed to support events without this field
         "reminder.notificationSent": false,
         startTime: { $gt: now },
       }).populate("userId");
+
+      console.log(`Found ${events.length} candidate events for reminders.`);
 
       for (const event of events) {
         const timeUntilEvent = event.startTime - now;
@@ -61,6 +63,7 @@ const setupCronJobs = () => {
             user.pushSubscriptions &&
             user.pushSubscriptions.length > 0
           ) {
+            console.log(`User ${user.userName} has ${user.pushSubscriptions.length} subscriptions.`);
             const payload = {
               title: `Reminder: ${event.title}`,
               body: `Your event starts in ${Math.round(
@@ -87,7 +90,8 @@ const setupCronJobs = () => {
               })
             );
 
-            await Promise.all(promises);
+            const results = await Promise.all(promises);
+            console.log(`Sent notifications to ${user.userName}. Results: ${results.length} attempts.`);
 
             // Remove invalid subscriptions
             if (invalidEndpoints.length > 0) {
