@@ -1,16 +1,19 @@
 import React from "react";
 import { Calendar, MapPin, Clock, Edit2, Trash2 } from "lucide-react";
+import { motion } from "framer-motion";
 
 const EventCard = ({ event, onEdit, onDelete }) => {
   // Calculate real-time status based on current time
   const getActualStatus = () => {
     if (event.status === "CANCELLED") return "CANCELLED";
-    
+
     const now = new Date();
     // Use endTime if available, otherwise use startTime
-    const eventEndTime = event.endTime ? new Date(event.endTime) : new Date(event.startTime);
+    const eventEndTime = event.endTime
+      ? new Date(event.endTime)
+      : new Date(event.startTime);
     const eventStartTime = new Date(event.startTime);
-    
+
     // If event has ended, it should be COMPLETED
     if (eventEndTime < now) {
       return "COMPLETED";
@@ -60,7 +63,14 @@ const EventCard = ({ event, onEdit, onDelete }) => {
   };
 
   return (
-    <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+    <motion.div
+      layout
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      whileHover={{ y: -5, transition: { duration: 0.2 } }}
+      className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+    >
       <div className="flex justify-between items-start mb-4">
         <div
           className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(
@@ -70,18 +80,22 @@ const EventCard = ({ event, onEdit, onDelete }) => {
           {actualStatus}
         </div>
         <div className="flex gap-2">
-          <button
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
             onClick={() => onEdit(event)}
             className="p-1.5 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
           >
             <Edit2 className="w-4 h-4" />
-          </button>
-          <button
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
             onClick={() => onDelete(event._id)}
             className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
           >
             <Trash2 className="w-4 h-4" />
-          </button>
+          </motion.button>
         </div>
       </div>
 
@@ -114,7 +128,7 @@ const EventCard = ({ event, onEdit, onDelete }) => {
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
