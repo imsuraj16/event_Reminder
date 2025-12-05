@@ -131,10 +131,10 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex">
+    <div className="h-screen bg-white flex overflow-hidden">
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
-      <main className="flex-1 ml-0 md:ml-64 p-4 md:p-8 w-full">
+      <main className="flex-1 ml-0 md:ml-64 p-4 md:p-8 w-full overflow-y-auto">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}

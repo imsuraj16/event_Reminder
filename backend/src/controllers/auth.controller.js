@@ -30,7 +30,7 @@ const registerUser = async (req, res) => {
     });
 
     const token = jwt.sign({ id: user._id }, config.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "7d",
     });
 
     res.cookie("token", token, {
@@ -43,6 +43,7 @@ const registerUser = async (req, res) => {
     return res.status(201).json({
       success: true,
       message: "User registered successfully",
+      token,
       user: {
         id: user._id,
         fullName: user.fullName,
@@ -79,7 +80,7 @@ const loginUser = async (req, res) => {
     }
 
     const token = jwt.sign({ id: userExists._id }, config.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "7d",
     });
 
     res.cookie("token", token, {
@@ -92,6 +93,7 @@ const loginUser = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "User logged in successfully",
+      token,
       user: {
         id: userExists._id,
         fullName: userExists.fullName,

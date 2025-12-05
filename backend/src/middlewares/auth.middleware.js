@@ -3,8 +3,15 @@ const config = require("../config/config");
 const userModel = require("../models/user.model");
 
 const authMiddleware = async (req, res, next) => {
-  const { token } = req.cookies;
+  // Try to get token from Authorization header first, then from cookies
+  let token = null;
   
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    token = authHeader.split(' ')[1];
+  } else if (req.cookies?.token) {
+    token = req.cookies.token;
+  }
 
   if (!token) {
     return res.status(401).json({
