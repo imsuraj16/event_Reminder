@@ -12,7 +12,8 @@ const app = express();
 app.use(cors({
     origin: [
         "https://event-reminder-rosy.vercel.app",
-        "https://whimsical-zabaione-d369c0.netlify.app"
+        "https://whimsical-zabaione-d369c0.netlify.app",
+        "http://localhost:5173"
     ],
     credentials: true
 }));
