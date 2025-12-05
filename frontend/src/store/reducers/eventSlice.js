@@ -93,6 +93,14 @@ const eventSlice = createSlice({
       .addCase(deleteEvent.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+
+      // Clear events on logout
+      .addCase("user/logoutUser/fulfilled", (state) => {
+        state.events = [];
+        state.loading = false;
+        state.error = null;
+        state.successMessage = null;
       });
   },
 });

@@ -16,6 +16,7 @@ import {
   CloudRain,
   CloudSnow,
   CloudLightning,
+  CheckCircle,
 } from "lucide-react";
 import Header from "../components/Header";
 import { motion } from "framer-motion";
@@ -440,7 +441,7 @@ const EventifyLanding = () => {
                     <RefreshCw className="w-4 h-4 animate-spin" />
                     <span>Loading...</span>
                   </div>
-                ) : nextEvent ? (
+                ) : nextEvent && isAuthenticated ? (
                   <div className="flex flex-row items-center gap-6 flex-grow">
                     <h3 className="text-xl font-bold text-gray-900">
                       {nextEvent.title}
@@ -456,12 +457,28 @@ const EventifyLanding = () => {
                   </div>
                 ) : (
                   <div className="flex flex-row items-center gap-3 flex-grow text-gray-500">
-                    <CalendarX className="w-5 h-5" />
-                    <span className="text-sm">
-                      {isAuthenticated
-                        ? "No upcoming events"
-                        : "Login to see your events"}
-                    </span>
+                    {isAuthenticated ? (
+                      events && events.length > 0 ? (
+                        <>
+                          <CheckCircle className="w-5 h-5 text-green-600" />
+                          <span className="text-sm font-medium text-gray-700">
+                            All events completed
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <CalendarX className="w-5 h-5" />
+                          <span className="text-sm">No upcoming events</span>
+                        </>
+                      )
+                    ) : (
+                      <>
+                        <CalendarX className="w-5 h-5" />
+                        <span className="text-sm">
+                          Login to see your results
+                        </span>
+                      </>
+                    )}
                   </div>
                 )}
               </motion.div>

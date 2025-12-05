@@ -102,38 +102,7 @@ const updateEvent = async (req, res) => {
       remindBeforeMinutes,
     } = req.body || {};
 
-    const updateData = {
-      title,
-      description,
-      location,
-      startTime,
-      endTime,
-      status,
-    };
-
-    if (remindBeforeMinutes !== undefined) {
-      updateData["reminder.remindBeforeMinutes"] = remindBeforeMinutes;
-      // If the reminder time changes, we might want to reset notificationSent so they get a new reminder?
-      // For now, let's assume if they change the time, they might want a new reminder if it's in the future.
-      // But let's keep it simple and just update the time.
-      // Actually, if we don't reset notificationSent, and they move the event to later, they won't get a reminder.
-      // Let's reset notificationSent if remindBeforeMinutes or startTime changes.
-      updateData["reminder.notificationSent"] = false; 
-    }
-    
-    // Also reset notificationSent if startTime changes
-    if (startTime) {
-        updateData["reminder.notificationSent"] = false;
-    }
-
-    const event = await eventModel.findOneAndUpdate(
-      {
-        _id: eventId,
-        userId: user,
-      },
-      { $set: updateData },
-      { new: true }
-    );
+    const event = await eventModel.findOne({ _id: eventId, userId: user });
 
     if (!event) {
       return res.status(404).json({
@@ -142,6 +111,41 @@ const updateEvent = async (req, res) => {
           "Event not found or you are not authorized to update this event",
       });
     }
+
+    // Update fields if they are provided
+    if (title !== undefined) event.title = title;
+    if (description !== undefined) event.description = description;
+    if (location !== undefined) event.location = location;
+    if (endTime !== undefined) event.endTime = endTime;
+    if (status !== undefined) event.status = status;
+
+    let shouldResetNotification = false;
+
+    // Check startTime change
+    if (startTime !== undefined) {
+      const newStartTime = new Date(startTime);
+      // Compare time values
+      if (newStartTime.getTime() !== new Date(event.startTime).getTime()) {
+        event.startTime = newStartTime;
+        shouldResetNotification = true;
+      }
+    }
+
+    // Check remindBeforeMinutes change
+    if (remindBeforeMinutes !== undefined) {
+      if (event.reminder.remindBeforeMinutes !== remindBeforeMinutes) {
+        event.reminder.remindBeforeMinutes = remindBeforeMinutes;
+        shouldResetNotification = true;
+      }
+    }
+
+    // If critical scheduling fields changed, reset notification status
+    // so the reminder is picked up again (if in the future).
+    if (shouldResetNotification) {
+      event.reminder.notificationSent = false;
+    }
+
+    await event.save();
 
     return res.status(200).json({
       success: true,
