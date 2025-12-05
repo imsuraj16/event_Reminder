@@ -10,7 +10,7 @@ const cors = require("cors");
 const app = express();
 
 app.use(cors({
-    origin: 'https://event-reminder-rosy.vercel.app',
+    origin: 'https://event-reminder-rosy.vercel.app','https://whimsical-zabaione-d369c0.netlify.app',
     credentials: true
 }));
 
