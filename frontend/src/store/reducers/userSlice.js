@@ -10,6 +10,7 @@ const userSlice = createSlice({
   name: "user",
   initialState: {
     user: null,
+    isAuthenticated: false,
     loading: true,
     error: null,
   },
@@ -23,11 +24,13 @@ const userSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.user = action.payload; // normalized user
+        state.isAuthenticated = true;
         state.loading = false;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.isAuthenticated = false;
       })
 
       // Login
@@ -37,11 +40,13 @@ const userSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.user = action.payload;
+        state.isAuthenticated = true;
         state.loading = false;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.isAuthenticated = false;
       })
 
       // Load User
@@ -51,6 +56,7 @@ const userSlice = createSlice({
       })
       .addCase(loadUser.fulfilled, (state, action) => {
         state.user = action.payload;
+        state.isAuthenticated = true;
         state.loading = false;
         state.error = null;
       })
@@ -58,11 +64,13 @@ const userSlice = createSlice({
         state.loading = false;
         // Don't set error for loadUser failure - it's expected when not logged in
         state.user = null;
+        state.isAuthenticated = false;
       })
 
       // Logout User
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
+        state.isAuthenticated = false;
         state.loading = false;
         state.error = null;
       });
