@@ -58,7 +58,7 @@ const getLoggedInEvents = async (req, res) => {
       filter.status = status;
     }
 
-    const events = await eventModel.find(filter).sort({ startTime: 1 });
+    const events = await eventModel.find(filter).sort({ createdAt: -1 });
 
     return res.status(200).json({
       success: true,

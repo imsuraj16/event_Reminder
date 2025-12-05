@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Clock,
   CloudSun,
@@ -9,9 +10,11 @@ import {
   ArrowRight,
   RefreshCw,
   MapPin,
+  CalendarX,
 } from "lucide-react";
 import Header from "../components/Header";
 import { motion } from "framer-motion";
+import { fetchEvents } from "../store/actions/eventActions";
 
 // --- RealTimeClock Component ---
 const RealTimeClock = () => {
@@ -41,17 +44,65 @@ const RealTimeClock = () => {
   });
 
   return (
-    <div className="text-center mt-6">
-      <div className="text-5xl font-extrabold tracking-tight text-gray-900">
+    <div className="text-center mt-4 sm:mt-6">
+      <div className="text-3xl sm:text-5xl font-extrabold tracking-tight text-gray-900">
         {timeString}
       </div>
-      <div className="text-sm font-medium text-gray-600 mt-1">{dateString}</div>
+      <div className="text-xs sm:text-sm font-medium text-gray-600 mt-1">{dateString}</div>
     </div>
   );
 };
 
 // --- Main Landing Page Component ---
 const EventifyLanding = () => {
+  const dispatch = useDispatch();
+  const { events, loading } = useSelector((state) => state.events);
+  const { isAuthenticated } = useSelector((state) => state.user);
+
+  // Fetch events on mount if authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(fetchEvents());
+    }
+  }, [dispatch, isAuthenticated]);
+
+  // Get the next upcoming event (closest future event)
+  const nextEvent = useMemo(() => {
+    if (!events || events.length === 0) return null;
+    
+    const now = new Date();
+    const upcomingEvents = events
+      .filter((event) => new Date(event.startTime) > now && event.status === "UPCOMING")
+      .sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+    
+    return upcomingEvents[0] || null;
+  }, [events]);
+
+  // Format event date/time for display
+  const formatEventTime = (dateString) => {
+    const eventDate = new Date(dateString);
+    const now = new Date();
+    const isToday = eventDate.toDateString() === now.toDateString();
+    const isTomorrow = eventDate.toDateString() === new Date(now.getTime() + 86400000).toDateString();
+    
+    const timeStr = eventDate.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+
+    if (isToday) return `Today at ${timeStr}`;
+    if (isTomorrow) return `Tomorrow at ${timeStr}`;
+    
+    return eventDate.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
   // Shadow adjusted for a light background
   const lightCardShadow =
     "shadow-xl shadow-gray-300/50 transition-shadow duration-300";
@@ -157,7 +208,7 @@ const EventifyLanding = () => {
             </motion.div>
           </motion.div>
 
-          {/* Right Column: Information Cards in a Flex Row */}
+          {/* Right Column: Information Cards */}
           <motion.div
             initial="hidden"
             animate="visible"
@@ -171,82 +222,101 @@ const EventifyLanding = () => {
             }}
             className="w-full flex justify-center lg:justify-end items-center"
           >
-            <div className="flex flex-col md:flex-row gap-4">
-              {/* 1. Real-Time Clock Card - Square dimensions, light background */}
-              <motion.div
-                variants={cardVariants}
-                whileHover={{ y: -10 }}
-                className={`bg-gray-100 p-6 rounded-2xl w-56 h-56 flex flex-col justify-center items-center ${lightCardShadow}`}
-              >
-                <div className="flex items-center text-gray-500 mb-2">
-                  <Clock className="w-5 h-5 mr-2" />
-                  <span className="font-semibold text-sm uppercase tracking-wider">
-                    Current Time
-                  </span>
-                </div>
-                <RealTimeClock />
-              </motion.div>
-
-              {/* 2. Weather Card - Square dimensions, light background */}
-              <motion.div
-                variants={cardVariants}
-                whileHover={{ y: -10 }}
-                className={`bg-gray-100 p-6 rounded-2xl w-56 h-56 flex flex-col ${lightCardShadow}`}
-              >
-                <div className="flex items-center justify-between text-gray-500 mb-4">
-                  <div className="flex items-center">
-                    <CloudSun className="w-5 h-5 mr-2" />
-                    <span className="font-semibold text-sm uppercase tracking-wider">
-                      Weather
+            <div className="flex flex-col gap-4">
+              {/* Top Row: Current Time & Weather in 2x2 grid on mobile */}
+              <div className="grid grid-cols-2 sm:flex sm:flex-row gap-4">
+                {/* 1. Real-Time Clock Card */}
+                <motion.div
+                  variants={cardVariants}
+                  whileHover={{ y: -10 }}
+                  className={`bg-gray-100 p-4 sm:p-6 rounded-2xl w-full sm:w-56 h-40 sm:h-48 flex flex-col justify-center items-center ${lightCardShadow}`}
+                >
+                  <div className="flex items-center text-gray-500 mb-2">
+                    <Clock className="w-4 sm:w-5 h-4 sm:h-5 mr-1 sm:mr-2" />
+                    <span className="font-semibold text-xs sm:text-sm uppercase tracking-wider">
+                      Current Time
                     </span>
                   </div>
-                  <button className="text-gray-400 hover:text-gray-900 transition-colors">
-                    <RefreshCw className="w-4 h-4" />
-                  </button>
-                </div>
+                  <RealTimeClock />
+                </motion.div>
 
-                <div className="flex flex-col items-start justify-center flex-grow">
-                  <div className="text-6xl font-extrabold text-gray-900">
-                    18°C
-                  </div>
-                  <div className="mt-3">
-                    <div className="text-xl font-medium text-gray-700">
-                      Partly Cloudy
+                {/* 2. Weather Card */}
+                <motion.div
+                  variants={cardVariants}
+                  whileHover={{ y: -10 }}
+                  className={`bg-gray-100 p-4 sm:p-6 rounded-2xl w-full sm:w-56 h-40 sm:h-48 flex flex-col ${lightCardShadow}`}
+                >
+                  <div className="flex items-center justify-between text-gray-500 mb-2 sm:mb-3">
+                    <div className="flex items-center">
+                      <CloudSun className="w-4 sm:w-5 h-4 sm:h-5 mr-1 sm:mr-2" />
+                      <span className="font-semibold text-xs sm:text-sm uppercase tracking-wider">
+                        Weather
+                      </span>
                     </div>
-                    <div className="text-sm text-gray-500 flex items-center mt-1">
-                      <MapPin className="w-4 h-4 mr-1 text-gray-500" />
-                      San Francisco
-                    </div>
+                    <button className="text-gray-400 hover:text-gray-900 transition-colors">
+                      <RefreshCw className="w-3 sm:w-4 h-3 sm:h-4" />
+                    </button>
                   </div>
-                </div>
-              </motion.div>
 
-              {/* 3. Next Event Card - Square dimensions, light background */}
+                  <div className="flex flex-col items-start justify-center flex-grow">
+                    <div className="text-3xl sm:text-5xl font-extrabold text-gray-900">
+                      18°C
+                    </div>
+                    <div className="mt-1 sm:mt-2">
+                      <div className="text-sm sm:text-lg font-medium text-gray-700">
+                        Partly Cloudy
+                      </div>
+                      <div className="text-xs sm:text-sm text-gray-500 flex items-center mt-1">
+                        <MapPin className="w-3 sm:w-4 h-3 sm:h-4 mr-1 text-gray-500" />
+                        San Francisco
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* Bottom Row: Next Event Card - Rectangle form */}
               <motion.div
                 variants={cardVariants}
-                whileHover={{ y: -10 }}
-                className={`bg-gray-100 p-6 rounded-2xl w-56 h-56 flex flex-col ${lightCardShadow}`}
+                whileHover={{ y: -5 }}
+                className={`bg-gray-100 p-6 rounded-2xl w-full flex flex-row items-center gap-6 ${lightCardShadow}`}
               >
-                <div className="flex items-center mb-4">
-                  <div className="w-3 h-3 rounded-full bg-gray-500 mr-3"></div>
+                <div className="flex items-center">
+                  <div className={`w-3 h-3 rounded-full mr-3 ${nextEvent ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></div>
                   <span className="font-semibold text-gray-500 text-sm uppercase tracking-wider">
                     Next Event
                   </span>
                 </div>
 
-                <div className="space-y-1 flex flex-col justify-center flex-grow">
-                  <h3 className="text-xl font-bold text-gray-900">
-                    Team Strategy Meeting
-                  </h3>
-                  <p className="text-sm text-gray-600 flex items-center">
-                    <Calendar className="w-4 h-4 mr-2 text-gray-500" />
-                    <span>Today at 3:00 PM</span>
-                  </p>
-                  <p className="text-sm text-gray-600 flex items-center">
-                    <MapPin className="w-4 h-4 mr-2 text-gray-500" />
-                    <span>Conf. Room A</span>
-                  </p>
-                </div>
+                <div className="h-10 w-px bg-gray-300"></div>
+
+                {loading ? (
+                  <div className="flex items-center gap-2 text-gray-500">
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    <span>Loading...</span>
+                  </div>
+                ) : nextEvent ? (
+                  <div className="flex flex-row items-center gap-6 flex-grow">
+                    <h3 className="text-xl font-bold text-gray-900">
+                      {nextEvent.title}
+                    </h3>
+                    <p className="text-sm text-gray-600 flex items-center">
+                      <Calendar className="w-4 h-4 mr-2 text-gray-500" />
+                      <span>{formatEventTime(nextEvent.startTime)}</span>
+                    </p>
+                    <p className="text-sm text-gray-600 flex items-center">
+                      <MapPin className="w-4 h-4 mr-2 text-gray-500" />
+                      <span>{nextEvent.location || "TBD"}</span>
+                    </p>
+                  </div>
+                ) : (
+                  <div className="flex flex-row items-center gap-3 flex-grow text-gray-500">
+                    <CalendarX className="w-5 h-5" />
+                    <span className="text-sm">
+                      {isAuthenticated ? "No upcoming events" : "Login to see your events"}
+                    </span>
+                  </div>
+                )}
               </motion.div>
             </div>
           </motion.div>

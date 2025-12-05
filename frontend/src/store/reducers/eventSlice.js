@@ -48,7 +48,7 @@ const eventSlice = createSlice({
       })
       .addCase(createEvent.fulfilled, (state, action) => {
         state.loading = false;
-        state.events.push(action.payload);
+        state.events.unshift(action.payload);
         state.successMessage = "Event created successfully!";
       })
       .addCase(createEvent.rejected, (state, action) => {

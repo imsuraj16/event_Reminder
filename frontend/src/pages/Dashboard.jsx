@@ -173,21 +173,21 @@ const Dashboard = () => {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+          className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8"
         >
           <motion.div
             variants={itemVariants}
-            className="bg-gray-100 p-6 rounded-2xl shadow-xl shadow-gray-300/50 transition-shadow duration-300"
+            className="bg-gray-100 p-4 md:p-6 rounded-2xl shadow-xl shadow-gray-300/50 transition-shadow duration-300"
           >
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-gray-200 rounded-xl text-gray-700">
-                <Calendar className="w-6 h-6" />
+            <div className="flex items-center gap-3 md:gap-4">
+              <div className="p-2 md:p-3 bg-gray-200 rounded-xl text-gray-700">
+                <Calendar className="w-5 h-5 md:w-6 md:h-6" />
               </div>
               <div>
-                <p className="text-sm text-gray-500 font-semibold uppercase tracking-wider">
+                <p className="text-xs md:text-sm text-gray-500 font-semibold uppercase tracking-wider">
                   Total Events
                 </p>
-                <h3 className="text-2xl font-extrabold text-gray-900">
+                <h3 className="text-xl md:text-2xl font-extrabold text-gray-900">
                   {totalEvents}
                 </h3>
               </div>
@@ -196,18 +196,18 @@ const Dashboard = () => {
 
           <motion.div
             variants={itemVariants}
-            className="bg-gray-100 p-6 rounded-2xl shadow-xl shadow-gray-300/50 transition-shadow duration-300"
+            className="bg-gray-100 p-4 md:p-6 rounded-2xl shadow-xl shadow-gray-300/50 transition-shadow duration-300"
           >
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-gray-200 rounded-xl text-gray-700">
-                <Clock className="w-6 h-6" />
+            <div className="flex items-center gap-3 md:gap-4">
+              <div className="p-2 md:p-3 bg-gray-200 rounded-xl text-gray-700">
+                <Clock className="w-5 h-5 md:w-6 md:h-6" />
               </div>
               <div>
-                <p className="text-sm text-gray-500 font-semibold uppercase tracking-wider">
+                <p className="text-xs md:text-sm text-gray-500 font-semibold uppercase tracking-wider">
                   Upcoming
                 </p>
                 <div className="flex items-baseline gap-2">
-                  <h3 className="text-2xl font-extrabold text-gray-900">
+                  <h3 className="text-xl md:text-2xl font-extrabold text-gray-900">
                     {upcomingEvents}
                   </h3>
                 </div>
@@ -217,17 +217,17 @@ const Dashboard = () => {
 
           <motion.div
             variants={itemVariants}
-            className="bg-gray-100 p-6 rounded-2xl shadow-xl shadow-gray-300/50 transition-shadow duration-300"
+            className="bg-gray-100 p-4 md:p-6 rounded-2xl shadow-xl shadow-gray-300/50 transition-shadow duration-300"
           >
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-gray-200 rounded-xl text-gray-700">
-                <CheckCircle className="w-6 h-6" />
+            <div className="flex items-center gap-3 md:gap-4">
+              <div className="p-2 md:p-3 bg-gray-200 rounded-xl text-gray-700">
+                <CheckCircle className="w-5 h-5 md:w-6 md:h-6" />
               </div>
               <div>
-                <p className="text-sm text-gray-500 font-semibold uppercase tracking-wider">
+                <p className="text-xs md:text-sm text-gray-500 font-semibold uppercase tracking-wider">
                   Completed
                 </p>
-                <h3 className="text-2xl font-extrabold text-gray-900">
+                <h3 className="text-xl md:text-2xl font-extrabold text-gray-900">
                   {completedEvents}
                 </h3>
               </div>
@@ -236,17 +236,17 @@ const Dashboard = () => {
 
           <motion.div
             variants={itemVariants}
-            className="bg-gray-100 p-6 rounded-2xl shadow-xl shadow-gray-300/50 transition-shadow duration-300"
+            className="bg-gray-100 p-4 md:p-6 rounded-2xl shadow-xl shadow-gray-300/50 transition-shadow duration-300"
           >
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-gray-200 rounded-xl text-gray-700">
-                <TrendingUp className="w-6 h-6" />
+            <div className="flex items-center gap-3 md:gap-4">
+              <div className="p-2 md:p-3 bg-gray-200 rounded-xl text-gray-700">
+                <TrendingUp className="w-5 h-5 md:w-6 md:h-6" />
               </div>
               <div>
-                <p className="text-sm text-gray-500 font-semibold uppercase tracking-wider">
+                <p className="text-xs md:text-sm text-gray-500 font-semibold uppercase tracking-wider">
                   Completion Rate
                 </p>
-                <h3 className="text-2xl font-extrabold text-gray-900">
+                <h3 className="text-xl md:text-2xl font-extrabold text-gray-900">
                   {completionRate}%
                 </h3>
               </div>
