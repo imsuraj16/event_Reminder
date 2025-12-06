@@ -137,6 +137,9 @@ ScreenShots-
 
 <img width="1920" height="1080" alt="Screenshot from 2025-12-06 02-14-06" src="https://github.com/user-attachments/assets/efdc8c04-ee8d-47b0-8231-af280e3e5ad1" />
 
+<img width="400" height="870" alt="Screenshot from 2025-12-06 15-06-40" src="https://github.com/user-attachments/assets/1f1c6968-1f5d-408e-acc0-7472d44ac4bd" />
+
+
 <img width="1916" height="960" alt="Screenshot from 2025-12-06 02-08-04" src="https://github.com/user-attachments/assets/e1ce2edc-db36-466a-8eaf-04edd483104a" />
 
 
