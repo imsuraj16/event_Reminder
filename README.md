@@ -122,3 +122,28 @@ This will generate a `dist` folder with the static files.
    npm run dev
    ```
 4. Access the application in your browser.
+
+
+
+ScreenShots-
+
+<img width="1920" height="965" alt="Screenshot from 2025-12-06 14-45-37" src="https://github.com/user-attachments/assets/a64e1d63-cc39-4ec6-9604-42f709827294" />
+
+<img width="388" height="862" alt="image" src="https://github.com/user-attachments/assets/79a73cfd-1ca9-4bb4-a852-1ff7c63079f3" />
+
+<img width="1920" height="968" alt="Screenshot from 2025-12-06 14-50-07" src="https://github.com/user-attachments/assets/fd455223-9ea1-49e9-8b99-2aed9ce6b084" />
+
+<img width="1920" height="968" alt="Screenshot from 2025-12-06 15-06-04" src="https://github.com/user-attachments/assets/d8e61db8-79fb-4e83-93d5-ab195f5ce994" />
+
+<img width="1920" height="1080" alt="Screenshot from 2025-12-06 02-14-06" src="https://github.com/user-attachments/assets/efdc8c04-ee8d-47b0-8231-af280e3e5ad1" />
+
+<img width="1916" height="960" alt="Screenshot from 2025-12-06 02-08-04" src="https://github.com/user-attachments/assets/e1ce2edc-db36-466a-8eaf-04edd483104a" />
+
+
+
+
+
+
+
+
+
