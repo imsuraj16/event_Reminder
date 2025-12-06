@@ -21,7 +21,7 @@ const Login = () => {
   const onSubmit = async (data) => {
     const resultAction = await dispatch(loginUser(data));
     if (loginUser.fulfilled.match(resultAction)) {
-      navigate("/");
+      navigate("/dashboard");
     }
   };
 
