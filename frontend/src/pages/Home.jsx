@@ -66,7 +66,9 @@ const RealTimeClock = () => {
 const EventifyLanding = () => {
   const dispatch = useDispatch();
   const { events, loading } = useSelector((state) => state.events);
-  const { isAuthenticated } = useSelector((state) => state.user);
+  const { isAuthenticated, loading: userLoading } = useSelector(
+    (state) => state.user
+  );
 
   // --- Weather State & Logic ---
   const [weather, setWeather] = useState({
@@ -324,14 +326,6 @@ const EventifyLanding = () => {
                   <ArrowRight className="w-5 h-5 ml-1" />
                 </motion.button>
               </Link>
-
-              <motion.button
-                whileHover={{ scale: 1.05, backgroundColor: "#f3f4f6" }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-transparent text-gray-700 hover:text-gray-900 border border-gray-400 hover:border-gray-900 font-semibold py-3 px-8 rounded-xl transition-colors"
-              >
-                View Demo
-              </motion.button>
             </motion.div>
           </motion.div>
 
@@ -421,9 +415,9 @@ const EventifyLanding = () => {
               <motion.div
                 variants={cardVariants}
                 whileHover={{ y: -5 }}
-                className={`bg-gray-100 p-6 rounded-2xl w-full flex flex-row items-center gap-6 ${lightCardShadow}`}
+                className={`bg-gray-100 p-6 rounded-2xl w-full flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 ${lightCardShadow}`}
               >
-                <div className="flex items-center">
+                <div className="flex items-center w-full sm:w-auto">
                   <div
                     className={`w-3 h-3 rounded-full mr-3 ${
                       nextEvent ? "bg-green-500 animate-pulse" : "bg-gray-400"
@@ -434,26 +428,30 @@ const EventifyLanding = () => {
                   </span>
                 </div>
 
-                <div className="h-10 w-px bg-gray-300"></div>
+                <div className="hidden sm:block h-10 w-px bg-gray-300"></div>
 
-                {loading ? (
+                {loading || userLoading ? (
                   <div className="flex items-center gap-2 text-gray-500">
                     <RefreshCw className="w-4 h-4 animate-spin" />
                     <span>Loading...</span>
                   </div>
                 ) : nextEvent && isAuthenticated ? (
-                  <div className="flex flex-row items-center gap-6 flex-grow">
-                    <h3 className="text-xl font-bold text-gray-900">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-6 flex-grow w-full sm:w-auto">
+                    <h3 className="text-xl font-bold text-gray-900 break-words">
                       {nextEvent.title}
                     </h3>
-                    <p className="text-sm text-gray-600 flex items-center">
-                      <Calendar className="w-4 h-4 mr-2 text-gray-500" />
-                      <span>{formatEventTime(nextEvent.startTime)}</span>
-                    </p>
-                    <p className="text-sm text-gray-600 flex items-center">
-                      <MapPin className="w-4 h-4 mr-2 text-gray-500" />
-                      <span>{nextEvent.location || "TBD"}</span>
-                    </p>
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 w-full sm:w-auto">
+                      <p className="text-sm text-gray-600 flex items-center">
+                        <Calendar className="w-4 h-4 mr-2 text-gray-500 flex-shrink-0" />
+                        <span>{formatEventTime(nextEvent.startTime)}</span>
+                      </p>
+                      <p className="text-sm text-gray-600 flex items-center">
+                        <MapPin className="w-4 h-4 mr-2 text-gray-500 flex-shrink-0" />
+                        <span className="truncate">
+                          {nextEvent.location || "TBD"}
+                        </span>
+                      </p>
+                    </div>
                   </div>
                 ) : (
                   <div className="flex flex-row items-center gap-3 flex-grow text-gray-500">
